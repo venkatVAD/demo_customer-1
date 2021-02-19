@@ -1,0 +1,8 @@
+<launch>
+
+  <!-- Joystick low level driver -->
+  <node name="subsciber_for_mobile" pkg="demo_customer" type="temp.py" output="screen" />
+  <node pkg='turtlesim' type='turtlesim_node' name='turtlesim_node'/>
+
+</launch>
+
