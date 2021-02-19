@@ -3,29 +3,39 @@ import rospy
 from std_msgs.msg import String
 from geometry_msgs.msg import Twist
 import can
+import sys
 
-temp=[]
-
-
-t=False
-idx=392
+# paramers for connecting with can , make sure you provided correctly
 try:
-    bus = can.interface.Bus(bustype='socketcan', channel='vcan0', bitrate=1000000)
-except:
-    print("****				PLEASE MAKE CAN UP              	 ****")
+    baud_rate=rospy.get_param('baudrate')
+    channel=rospy.get_param('channel_can')
+    bus_type=rospy.get_param('bustype')
+    # bus = can.interface.Bus(bustype='socketcan', channel='vcan0', bitrate=1000000)
+    bus = can.interface.Bus(bustype=bus_type, channel=channel, bitrate=baud_rate)
+
+    print("---------------------------------------------------------------")
+
+    print("         CONNECTION TO CAN DEVICE-- SUCCESS")
+    print("---------------------------------------------------------------")
+    
+except Exception as e:
+    print("---------------------------------------------------------------")
+    print("                CONNECTION TO CAN DEVICE-- FAILED")
+    print("     			PLEASE MAKE CAN UP              	 ")
+    print("                                OR                                ")
+    print("            PLEASE DO CHECK BAUDRATE AND CHANNEL NAME IN LAUNCH FILE")
+    print(' ERROR is --',e)
+    print("----------------------------------------------------------------")
+    sys.exit()
+
+
 
 def callback(data):
     x_linear=data.linear.x
     x_angular=data.angular.x
-    
-    # if x_linear==2:
-    #     msg=[0x00,0X02,0X1,0x0, 0X0,0X0,0X0,0X0]
-    # elif x_linear==-2:
-    #     msg=[0x00,0X02,0X2,0x0, 0X0,0X0,0X0,0X0]
-    # else :
-    #     msg=[0x00,0X00,0X0,0x0, 0X0,0X0,0X0,0X0]
+
     a=abs(x_linear)
-    print(x_linear)
+
     if a == 0:
         b=0
     elif a>0 and a<0.2 : #  3
@@ -43,16 +53,10 @@ def callback(data):
         b=3.6
     else :
         b=0
-    print(b)
     hex_v=int(b*256)
-    print(hex_v)
     hex_v=hex(hex_v)
-    print(hex_v)
     hex_v=hex_v[2:]
     k=hex_v
-    print('k-',hex_v)
-    print('len k',len(k))
-    print(type(k))
     if len(k)==4:
         d1=k[:2]
         d2=k[2:]
@@ -70,8 +74,6 @@ def callback(data):
         d2='00'
     d1 = int(d1, 16)
     d2 = int(d2, 16)
-    print('d1',d1)
-    print('d2',d2)
 
     if x_linear>0:
         d3=0X1
@@ -81,9 +83,8 @@ def callback(data):
         d3=0X0
     print(d1,d2,d3)
     msg=[d2,d1,d3,0X0,0X0,0X0,0X0,0X0]
-    print(msg)
+    # print(msg)
 
-    # sendCAN_messagesToArduino(8,idx,msg)
     can_msg = can.Message(arbitration_id=0x188,
                               data=msg,
                               extended_id=False)
@@ -91,17 +92,8 @@ def callback(data):
     
     
 def listener():
-
-    # In ROS, nodes are uniquely named. If two nodes with the same
-    # name are launched, the previous one is kicked off. The
-    # anonymous=True flag means that rospy will choose a unique
-    # name for our 'listener' node so that multiple listeners can
-    # run simultaneously.
     rospy.init_node('mobile_subscriber', anonymous=True)
-
     rospy.Subscriber("turtle1/cmd_vel", Twist, callback)
-
-    # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
 
 if __name__ == '__main__':

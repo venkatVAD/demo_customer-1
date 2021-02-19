@@ -1,7 +1,17 @@
 <launch>
 
-  <!-- Joystick low level driver -->
-  <node name="subsciber_for_mobile" pkg="demo_customer" type="temp.py" output="screen" />
+  <!-- CAN realated  -->
+
+  <param name="/baudrate"  value='1000000' />  <!--IMP-->
+  <param name='/channel_can' value='vcan0' />   <!--IMP-->
+  <param name ='/bustype' value='socketcan'/>
+  <param name='/arbitration_id' value='0x188'/>
+
+ <!-- end of CAN related -->
+
+
+
+  <node name="subsciber_for_mobile" pkg="demo_customer" type="ros_mobile_can.py" output="screen" />
   <node pkg='turtlesim' type='turtlesim_node' name='turtlesim_node'/>
 
 </launch>
