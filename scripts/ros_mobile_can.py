@@ -10,6 +10,16 @@ try:
     baud_rate=rospy.get_param('baudrate')
     channel=rospy.get_param('channel_can')
     bus_type=rospy.get_param('bustype')
+    
+
+
+    if channel=='vcan0' or channel=='can0':
+        pass
+    else:
+        print("YOU ENTERED "+str(channel))
+        print("GIVEN INVALID CAN CHANNEL NAME ")
+        sys.exit()
+    
     # bus = can.interface.Bus(bustype='socketcan', channel='vcan0', bitrate=1000000)
     bus = can.interface.Bus(bustype=bus_type, channel=channel, bitrate=baud_rate)
 
@@ -35,6 +45,23 @@ def callback(data):
     x_angular=data.angular.x
 
     a=abs(x_linear)
+    if a==2:
+        if x_linear==2:
+           msg=[0x00,0X02,0X1,0x0, 0X0,0X0,0X0,0X0]
+        elif x_linear==-2:
+           msg=[0x00,0X02,0X2,0x0, 0X0,0X0,0X0,0X0]
+        else:
+            msg=[0x00,0X00,0X0,0x0, 0X0,0X0,0X0,0X0]
+
+    
+        print('MSG '+str(msg))
+        can_msg = can.Message(arbitration_id=0x188,
+                              data=msg,
+                              extended_id=False)
+    
+        bus.send(can_msg)
+        return 0
+
 
     if a == 0:
         b=0
