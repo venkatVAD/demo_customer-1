@@ -109,11 +109,4 @@ then you should see a joy stick came on the app. and you can see the turtle is m
 Thank you 
 if you understand anything please feel free to contact me. 
 
-
-
-
-
-
-
-
-
+--
