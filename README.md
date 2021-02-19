@@ -75,5 +75,45 @@ candump vcan0
 
 
 
+QUICK START:
+roslaunch demo_customer demo_customer.launch channel:=vcan0 baud_rate:=1000000
+
+Here you can change it to channel:=can0 , and it will work with hardware can
+and also you can specify baud_rate:=__ , your required baudrate(make sure you are giving valid once)
+
+if you dont specify any arguments while launching,
+roslaunch demo_customer demo_customer.launch
+then 
+the default values are :
+"baudrate" default='1000000' 
+"channel" default="can0"
+
+CHEAKING:
+in new terminal  run the following command and press top and bottom arrow keys, and you should see the turtle should be moving and also if you do candump vcan0/can0 you should see msgs printed)
+rosrun turtlesim turtle_teleop_key
+
+CONNECTING WITH MOBILE:
+
+Now we need an android mobile with https://play.google.com/store/apps/details?id=com.robotca.ControlApp&hl=en&gl=US this app installed.
+install it and open it , when you open it for the first time it will ask you for some permissions and provide it.
+
+Now close the app and open it again.
+and enter your IP(make sure both mobile and ros machine are connected to same wifi (same network))
+then change ip with your ros machine  ip address and click on 'Show Advanced options' ,
+
+then at 'Joystick topic' make to turtle1/cmd_vel
+and press on okay and 
+press on it.
+then you should see a joy stick came on the app. and you can see the turtle is moving if you move joystick .also  in the can dump as well. if the hardware can is selected then the vechile should also move according to your joystick commands.
+
+Thank you 
+if you understand anything please feel free to contact me. 
+
+
+
+
+
+
+
 
 
