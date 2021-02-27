@@ -11,6 +11,7 @@ try:
     baud_rate=rospy.get_param('baudrate')
     channel=rospy.get_param('channel_can')
     bus_type=rospy.get_param('bustype')
+    delay=rospy.get_param('delay_0')
     
 
 
@@ -66,7 +67,7 @@ def callback(data):
 
     if a == 0:
         b=0
-        time.sleep(0.5)
+        time.sleep(delay)
     elif a>0 and a<0.2 : #  3
         b=2.0
         
