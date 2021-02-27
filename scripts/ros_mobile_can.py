@@ -4,6 +4,7 @@ from std_msgs.msg import String
 from geometry_msgs.msg import Twist
 import can
 import sys
+import time
 
 # paramers for connecting with can , make sure you provided correctly
 try:
@@ -65,6 +66,7 @@ def callback(data):
 
     if a == 0:
         b=0
+        time.sleep(0.5)
     elif a>0 and a<0.2 : #  3
         b=2.0
         
